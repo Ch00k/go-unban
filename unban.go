@@ -66,6 +66,7 @@ func unban(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
+	fmt.Println(r.Header)
 
 	type IPstatus struct {
 		IP     string
@@ -74,7 +75,7 @@ func unban(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		remoteIP := strings.Split(r.RemoteAddr, ":")[0]
+		remoteIP := r.Header["X-Real-Ip"][0]
 		jails := getJails()
 		isBanned := isIPBanned(remoteIP, jails)
 		s := IPstatus{IP: remoteIP, Banned: isBanned}
